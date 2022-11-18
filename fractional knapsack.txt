@@ -1,0 +1,66 @@
+package com.shreyasWaphare;
+
+import java.io.*;
+import java.util.Comparator;
+import java.util.Arrays;
+
+class ItemNode
+{
+    int value;
+    int weight;
+    public ItemNode(int value,int weight)
+    {
+        this.value=value;
+        this.weight=weight;
+    }
+}
+
+public class Main {
+
+    public static double getMaxValue(ItemNode[] arr,int capacity )
+    {
+        Arrays.sort(arr,new Comparator<ItemNode>(){
+            public int compare(ItemNode item1,ItemNode item2)
+            {
+                double cmpr1 = (double)item1.value/(double)item1.weight;
+                double cmpr2 = (double)item2.value/(double)item2.weight;
+
+                if(cmpr1<cmpr2)
+                    return 1;
+                else
+                    return-1;
+            }
+    });
+        double totalVal = 0;
+
+        for(int i=0;i<arr.length;i++)
+        {
+            int curWt = (int)arr[i].weight;
+            int curValue = (int)arr[i].value;
+
+            if(capacity-curWt>=0)
+            {
+                capacity-=curWt;
+                totalVal += curValue;
+            }
+            else{
+                double fraction = ((double)capacity/(double)curWt);
+                totalVal += curValue*fraction;
+                capacity -= curWt*(int)fraction;
+
+            }
+
+        }
+        return totalVal;
+    }
+
+    public static void main(String[] args) {
+
+        ItemNode[] arr = {new ItemNode(60,10),new ItemNode(100,20),new ItemNode(120,30)};
+
+        int capacity = 50;
+
+        double totalValue = getMaxValue(arr,capacity);
+        System.out.println(totalValue);
+    }
+}
